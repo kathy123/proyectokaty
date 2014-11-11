@@ -5,7 +5,7 @@
 	return View::make('index');
 });*/
 Route::get('/', 'HomeController@index');
-Route::get('insc', 'insController@inscriptions');
+Route::controller('insc', 'insController');
 /*login*/
 Route::get('login', 'SessionsController@create');
 Route::post('logins', 'SessionsController@login');
@@ -13,6 +13,7 @@ Route::get('logout', 'SessionsController@logout');
 /*login*/
 
 Route::controller('admi', 'admController');
+Route::controller('coord', 'coordController');
 Route::controller('aut', 'autController');
 Route::controller('certifi', 'certController');
 Route::controller('cp', 'contrlpagosController');

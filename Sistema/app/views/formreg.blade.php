@@ -27,8 +27,8 @@
               <div class="login-box-plain">
                 <h2 class="bigintro">Register</h2>
                 <div class="divide-40"></div>
-                @if(programa)
-                  <span>{{programa->nombre}</span>
+                @if($programa)
+                  <span>{{$programa->nombre}</span>
                 @else 
                 <span>No existen modulos registrados</span>
                 @endif

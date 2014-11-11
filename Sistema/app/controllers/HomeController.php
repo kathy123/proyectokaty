@@ -5,7 +5,8 @@ class HomeController extends BaseController {
     public function index()
     { 
        $oferta = DB::table('oferta')->get();
-       return View::make('index')->with('offer', $oferta);
+       $evento =DB::table('evento')->get();
+       return View::make('index')->with('offer', $oferta)->with('event', $evento);
     }
    public function getInscripnew($id)
     { 

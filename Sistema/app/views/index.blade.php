@@ -1,3 +1,27 @@
+<?php
+function getImageUri($content)
+    {
+        $img = strstr($content, '<img');
+        if($img === false){
+            $img = 'assets/img/slider/1.jpg'; 
+        }
+        else{
+            $pos = strpos($img, '>');
+            if($pos === false)
+            {
+                $img = 'assets/img/slider/1.jpg'; 
+            }
+            else
+            {
+                $img = substr(strstr(substr($img, 0, $pos), 'src="'), 5);
+                $pos = strpos($img, '"');
+                $img = substr($img, 0, $pos);
+                $img = str_replace("../", "", $img);
+            }
+        }
+        return $img;    
+    }
+ ?>
 @extends('layouts.master')
 @section('title')
   @parent
@@ -6,15 +30,78 @@
 	@parent
 @stop
 @section('cara')
- @parent 
-@stop
-@section('menu-nav')
-	@parent
+   <section id="header" data-type="background" data-speed="10">	
+ <!-- OVERLAY -->
+			<!-- <div class="overlay"> -->
+				<!--MENU CELULAR-->
+				<div id="sidebar-collapse" class="sidebar-collapse btn visible-xs">
+					<i class="fa fa-bars" data-icon="fa fa-bars" data-icon1="fa fa-bars"></i>
+				</div>
+				<div class="divide60"></div>
+				<div id="mobile-menu" class="list-group collapse text-center">
+				  <a href="" class="list-group-item">Inicio</a>
+				  <a href="#oferta" class="list-group-item">Ofertas</a>
+				  <a href="#evento" class="list-group-item">Eventos</a>
+				  <a href="#informacion" class="list-group-item">Informacíon</a>
+				  <a href="#contact" class="list-group-item">Contactos</a>
+				  <a href="<?=URL::to('login');?>" class="list-group-item external">Acceso</a>
+				</div>
+					<!-- MENU PAGINA INICIO HERO -->
+					<div class="container-transparent text-center">
+						<ul class="heronav left hidden-xs">
+							<li><a href="">Inicio</a></li>
+							<li><a href="#oferta">Ofertas</a></li>
+							<li><a href="#evento">Eventos</a></li>
+						</ul>
+						<ul class="heronav right hidden-xs">
+							<li><a href="#informacion">Informacíon</a></li>
+							<li><a href="#contact">Contactos</a></li>
+							<li><a href="<?=URL::to('login');?>" class="external">Acceso</a></li>
+						</ul>
+						<h1>
+						<img class="logo" src="assets/fe/img/logo/escudopostgrado.png" height="120px" alt="logo name">
+						</h1>
+						<h1 class="page-title">Direccíon de Postgrado</h1>
+						<h1 class="page-sub-title">Universidad Autónoma"Tomás Frías"</h1>
+						<div class="showcase">
+						</div>
+					</div>
+				<!--/HERO -->
+			<!-- </div> -->
+			<!--/OVERLAY -->
+            
+	    <!-- MENU FIXED  NAV-BAR -->
+		   <div id="nav-bar" style="top:0px;" border="1px">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-3 col-md-4">
+						<div class="logo" >
+							<a href="<?=URL::to('/');?>"><img src="assets/fe/img/logo/banner1.png" height="40" alt="logo name"/></a>
+						</div>
+					</div>
+					<div class="col-sm-9 col-md-8">
+						<nav id="fixed-top-navigation">
+							<ul class="list-inline pull-right">
+								<li><a href="<?=URL::to('/');?>">Inicio</a></li>
+								<li><a href="#oferta">Ofertas</a></li>
+								<li><a href="#evento">Eventos</a></li>
+								<li><a href="#informacion">Informacion</a></li>
+								<li><a href="#contact">Contactos</a></li>
+								<li><a href="<?=URL::to('login');?>" class="external">ACCESO</a></li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/NAV-BAR -->
+		<!--/HEADER -->	
+		</section>
 @stop
 @section('content')
 	@parent	
 	    <!-- OFERTAS -->
-		<section id="portfolio" class="color-light text-center">			
+		<section id="oferta" class="color-light text-center">			
 				<div class="divide40"></div>
 					<div class="row">
 						<div class="col-md-12">
@@ -47,20 +134,20 @@
 					<div class="divide40"></div>
 					<div class="container">
 						<div id="filter-items" class="row">
+						    
 						    @if($offer)
 						    @foreach($offer as $oferta)
 							<div class="col xs-12 col-sm-6 design item">
 								<div class="filter-content">
-									<img src="{{$oferta->url}}" alt="" class="img-responsive" />
+									<img src="{{getImageUri($oferta->observaciones)}}" alt="" class="img-responsive" />
+									
 									<div class="image-content">
-										<h4>{{$oferta->observaciones}}</h4>
-										<a href="{{$oferta->url}}" class="btn btn-sm btn-warning colorbox-button">Registrarse(Modal)</a>
-									    
+										<h4></h4>
 									</div>
 								</div>
-								<a href= "<?=URL::to("/ins/inscriptions/".$oferta->idoferta)?>" title="Inscripcion" class="btn btn-sm btn-warning colorbox-button">AQUI</a>
+								<a href= "<?=URL::to("insc/inscriptions/".$oferta->idoferta)?>" title="Inscripcion" class="btn btn-sm btn-warning colorbox-button">AQUI</a>
 							</div>
-							<a href= "<?=URL::to("/ins/inscriptions/".$oferta->idoferta)?>" title="Inscripcion" class="btn btn-sm btn-warning">AQUI</a>
+							<a href= "<?=URL::to("insc/inscriptions/".$oferta->idoferta)?>" title="Inscripcion" class="btn btn-sm btn-warning">otro</a>
 							@endforeach
                                 </tbody>
                             </table>
@@ -168,13 +255,13 @@
 		</section>
 		<!--/OFERTAS -->				
 		<!-- EVENTOS -->
-		<section id="parallax-2" data-type="background" data-speed="10" class="pages textcenter">
+		<section id="evento" data-type="background" data-speed="10" class="pages textcenter">
 			<div class="parallax-overlay">
 				<h2 class="text-center">
 					<span class="bigintro-light">Eventos</span>
 				</h2>
-				 <div id="myCarousel" class="carousel slide">
-				  <!-- Indicators -->
+				<div id="myCarousel" class="carousel slide">
+				  <!-- cantidad de eventos activos -->
 				  <ol class="carousel-indicators">
 					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
 					<li data-target="#myCarousel" data-slide-to="1"></li>
@@ -185,46 +272,15 @@
 					  <div class="container">
 						<div class="carousel-caption">
 						  <div class="row">
-							<div class="circular col-md-6">
-								<img src="assets/nuevos/acreditacion_1_2.png" alt="headshot #1" />
-								<h3>SEGUNDA VERSIÓN DEL PROGRAMA DE DIPLOMADO EN EVALUACION y ACREDITACIÓN UNIVERSITARIA (VIRTUAL)(2014-2015)</h3>
-								<p>La Universidad Autónoma “Tomás Frías” conjuntamente la Fundación FAUTAPO, convocan a todos los profesionales a inscribirse a la segunda versión del Programa de Diplomado en Evaluación y Acreditación de la calidad en la Educación Superior. </p>
-								<h4>ENLACE</h4>
-							</div>
-							<div class="circular col-md-6">
-								<img src="assets/nuevos/acreditacion_2_2.png" alt="headshot #1" />
-								<h3>SEGUNDA VERSIÓN DEL PROGRAMA DE DIPLOMADO EN EVALUACION y ACREDITACIÓN UNIVERSITARIA (VIRTUAL)(2014-2015)</h3>
-								<p>La Universidad Autónoma “Tomás Frías” conjuntamente la Fundación FAUTAPO, convocan a todos los profesionales a inscribirse a la segunda versión del Programa de Diplomado en Evaluación y Acreditación de la calidad en la Educación Superior. </p>
-								<h4>ENLACE</h4>
-							</div>
-						 </div>
-						</div>
-					  </div>
-					</div>
-					<div class="item">
-					  <div class="container">
-						<div class="carousel-caption">
-						  <div class="row">
-							<div class="col-md-12">
-								<img src="img/nuevos/geotecnia_1.png" alt="headshot #3" />
-								<h3>II Programa Internacional de Maestría en Geotecnia</h3>
-								<p>La Universidad Autónoma "Tomás Frías" conjuntamente el Instituto Superior "José Antonio Echeverria" - CUJAE, convocan a los profesionales del área de Ingeniería (Geología, Mecánica de Rocas, Mecánica de suelos, Diseños, etc.) a:</p>
-								<h4>www.enlace.com</h4>
-							</div>
-						 </div>
-						</div>
-					  </div>
-					</div>
-					<div class="item">
-					  <div class="container">
-						<div class="carousel-caption">
-						  <div class="row">
-							<div class="col-md-12">
-								<img src="img/nuevos/geotecnia_2.png" alt="headshot #3" />
-								<h3>II Programa Internacional de Maestría en Geotecnia</h3>
-								<p>La Universidad Autónoma "Tomás Frías" conjuntamente el Instituto Superior "José Antonio Echeverria" - CUJAE, convocan a los profesionales del área de Ingeniería (Geología, Mecánica de Rocas, Mecánica de suelos, Diseños, etc.) a:</p>
-								<h4>www.enlace.com</h4>
-							</div>
+						    <div class="divide40"></div>
+							@if(@event)
+                            @foreach($event as $evento)
+                            <h3>{{$evento->nombre}}<h3>
+                            {{$evento->descripcion}}
+                            @endforeach
+                            @else 
+                            <h3>No hay ofertas de postgrado registrado</h3>
+                            @endif
 						 </div>
 						</div>
 					  </div>
@@ -309,7 +365,7 @@
 		</section>
 		<!--/TESTIMONIALS -->
 				<!-- FEATURES UNIT -->
-		<section id="features" class="color-light">
+		<section id="informacion" class="color-light">
 			<div class="container">
 				<div class="divide40"></div>
 				<div class="row">
@@ -427,22 +483,25 @@
 @section('pie')
 	@parent
 	<div id="column-footer" class="row-fluid">
-					<div class="col-sm-4">
-						<h3>INICIO</h3>
+					<div class="col-sm-3">
 						<ul>
-							<li><a href="#">ENLACEUNO</a></li>
+							<li><a href="#"><h4>INICIO</h4></a></li>
 						</ul>
 					</div>
-					<div class="col-sm-4">
-						<h3>OFERTAS</h3>
+					<div class="col-sm-3">
 						<ul>
-							<li><a href="#">ENLACEDOSSS</a></li>
+							<li><a href="#"><h4>OFERTAS</h4></a></li>
 						</ul>
 					</div>
-					<div class="col-sm-4">
-						<h3>CONTACTOS</h3>
+					<div class="col-sm-3">
 						<ul>
-							<li><a href="#">ENLACETRESSS</a></li>
+						
+							<li><a href="#"><h4>CONTACTOS</h4></a></li>
+						</ul>
+					</div>
+					<div class="col-sm-3">
+						<ul>
+							<li><a href="#"><h4>INICIO</h4></a></li>
 						</ul>
 					</div>
 				</div>

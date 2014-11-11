@@ -2,17 +2,60 @@
 
 class admController extends BaseController {
 
-	  public function __construct()
-	  { 
+	public function __construct()
+	{ 
 		    $this->beforeFilter('auth');
-	  }
-	  public function getIndex()
-	  {
+	}
+	public function getIndex()
+	{
 	    	return View::make('adm.index');
-	  }
-    public function getUsersnew()
-    {   $roles = DB::table('roles')->get();  
-        return View::make('adm.users_new')->with('rol',$roles);
+	}
+    
+    public function getDatosnew()
+    {
+        return View::make('adm.datospersona_new');
+    }
+    public function postDatossave()
+    {   
+        $date = new DateTime();       
+        DB::table('datospersona')->insert(
+            array(
+                'nombre' => Input::get('nombre'),
+                'apellidop' => Input::get('apellidop'),
+                'apellidom' => Input::get('apellidom'),
+                'ci' => Input::get('ci'),
+                'fecha_nac' => Input::get('fn'),
+                'pais' => Input::get('pais'),
+                'departamento' => Input::get('dep'),
+                'provincia' => Input::get('prov'),
+                'lugar' => 'Potosi',
+                'estado_civil' => Input::get('ecivil'),
+                'direccion' => Input::get('direccion'),
+                'telefono' => Input::get('telefono'),
+                'email' => Input::get('correo'),
+                'fecharegistro' =>  $date->format('d/m/Y'),
+                'fechamodificado' =>  $date->format('d/m/Y'),
+                'updated_at' => $date->format('d/m/Y'),
+                'created_at' => $date->format('d/m/Y'),
+            )
+        );
+        return Redirect::to('admi/datoshow');
+    }
+    public function getDatoshow()
+    {
+        $datos = DB::table('datospersona')->get();
+        return View::make('adm.datospersona_show')->with('dato',$datos);
+    }
+    public function postUsernew()
+    {   
+        $id =  Input::get('id');
+        $id = DB::table('datospersona')->where('ci','=',$id)->first(); 
+        $roles = DB::table('roles')->get(); 
+        return View::make('adm.users_new')->with('persona',$id)->with('rol',$roles);
+    }
+    public function getUserssearch()
+    {   
+        return View::make('adm.users_search');
     }
     public function postUserssave()
     {   $date = new DateTime();       
@@ -24,7 +67,7 @@ class admController extends BaseController {
                 'controlar_ip' => '192.168.1.1',
                 '_registrado' =>  $date->format('d/m/Y'),
                 '_modificado' =>  $date->format('d/m/Y'),
-                'id_personal' => '2',
+                'iddpersona'=> Input::get('persona'),
                 'idroles' => Input::get('roles'),
                 'updated_at' => $date->format('d/m/Y'),
                 'created_at' => $date->format('d/m/Y'),
@@ -95,34 +138,6 @@ class admController extends BaseController {
         $post = DB::table('tipopostgrado')->get();
         return View::make('adm.nivel_edit')->with('postg', $post);
     }
-    /*
-    public function getTrabajofinalnew()
-    {    
-        $trabajo = DB::table('tipotrabajo')->get();
-        return View::make('adm.trabajofinal_new')->with('tra', $trabajo);
-    }
-     public function postTrabajofinalsave()
-    {   
-        $date = new DateTime(); 
-        DB::table('tipotrabajo')->insert(
-            array( 
-                'nombre' => Input::get('nombre'),
-                'estado' => 'A',
-                'created_at' => $date->format('d/m/Y'),
-                'updated_at' => $date->format('d/m/Y')
-            )
-        );
-        return Redirect::to('admi/trabajofinalnew');
-    }
-
-    public function postTfedit($id)
-    {    
-        return Redirect::to('admi/trabajofinalnew');
-    }
-    public function postTfbane($id)
-    {    
-      return Redirect::to('admi/trabajofinalnew');
-    }*/
     public function getPerfil()
     {   
         return View::make('adm.perfil');
@@ -188,6 +203,46 @@ class admController extends BaseController {
         $programa = DB::table('programa')->get();
         return View::make('adm.program_show')->with('prog', $programa);
     }
+
+    public function getReporte()
+    {
+        /*$programa = DB::table('programa')->where('idprograma','11')->first();*/
+        $programa = DB::table('programa')->get();
+
+        $code = '<html>
+            <head>
+                <title></title>
+            </head>
+            <body>
+                <h1>Lista de programas</h1>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Modalidad</th>
+                                </tr>                                
+                            </thead>
+                            <tbody>';
+                                foreach($programa as $prog){
+                                $code = $code.'<tr>
+                                    <td>'.$prog->nombre.'</td>
+                                    <td>'.$prog->modalidad.'</td>
+                                </tr>';
+                                }
+                            $code = $code.'</tbody>
+                        </table>
+                    </div>
+                </div>
+            </body>
+        </html>';
+        //return PDF::load($code, 'letter', 'portrait')->download('lista de programas');
+        //$html = View::make('adm.program_show')->with('prog', $programa);
+        return PDF::load($code, 'letter', 'portrait')->show();
+
+    }
+
     public function getProgramsver()
     {
         $programa = DB::table('programa')
@@ -198,7 +253,6 @@ class admController extends BaseController {
         
         //$programa = DB::table('programa')->get();
         return View::make('adm.programshow')->with('prog', $programa);
-
     }
     public function postConvenionew()
     { 
@@ -210,14 +264,16 @@ class admController extends BaseController {
             ->get();
         return View::make('adm.offer_new')->with('prog', $programa);
     }
+
     public function postOffersave()
     { 
         $date = new DateTime();       
+        
         DB::table('oferta')->insert(
             array(
                 'url' => Input::get('url'),
                 'estado' => Input::get('estado'),
-                'observaciones' => Input::get('obsevaciones'),
+                'observaciones' => Input::get('observaciones'),
                 'fecha_inicio' => Input::get('fecha_inicio'),
                 'fecha_fin' => Input::get('fecha_fin'),
                 'idprograma' => Input::get('program'),
@@ -232,6 +288,32 @@ class admController extends BaseController {
        $oferta = DB::table('oferta')->get();
         return View::make('adm.offer_show')->with('offer', $oferta);
     }
+    public function getEventnew()
+    { 
+        return View::make('adm.event_new');
+    }
+    public function postEventsave()
+    { 
+        $date = new DateTime();       
+        
+        DB::table('evento')->insert(
+            array(
+                'nombre' => Input::get('nombre'),
+                'descripcion' => Input::get('descripcion'),
+                'url' => '  ',
+                'estado' => 'A',
+                'updated_at' => $date->format('d/m/Y'),
+                'created_at' => $date->format('d/m/Y'),    
+            )
+        );
+        return Redirect::to('admi/eventshow');
+    }
+    public function getEventshow()
+    { 
+       $evento = DB::table('evento')->get();
+       return View::make('adm.event_show')->with('eventos', $evento);
+    }
+
     public function getMateriasnew($id)
     { 
         //$idprograma=&$id;
@@ -239,7 +321,6 @@ class admController extends BaseController {
         $tipo = DB::table('tipopostgrado')->where('idpostgrado','=', $prog->grado_academico)->first();
         $modulos = DB::table('modulos')->where('idprograma','=',$id)->get();
         return View::make('adm.materias_new')->with(array('prog'=> $prog, 'tipo' => $tipo,'modulos' => $modulos));
-
     }
     public function postMateriassave()
     {   // program::find(@id):
@@ -308,7 +389,7 @@ class admController extends BaseController {
     {
         return Redirect::to('admi/docenteshow');
     }
-    public function postDocenteshow()
+    public function getDocenteshow()
     {
         return View::make('adm.docente_show');
     }
@@ -316,74 +397,69 @@ class admController extends BaseController {
     {
         return View::make('adm.inscritos_show');
     }
-    public function getPagosnew()
+    public function getInscritosupdate()
+    {
+        return View::make('adm.inscritos_update');
+    }
+    public function getPagonew()
     {
         return View::make('adm.pago_new');
     }
-    public function postPagossave()
+    public function postPagosave()
     {
        return Redirect::to('admi/pagoshow');
     }
-    public function postPagoshow()
+    public function getPagoshow()
     {
         return View::make('adm.pago_show');
     }
-    public function Tiponew()
-    {
-          return View::make('admi.tipo_new');
-    }
-    public function getTiposhow()
-    {
-        return View::make('admi.tipo_show');
-    }
     
-   /* public function getTiposhow()
+    /* 
+    public function datos estudiante()
     {
-      auth
-      confirmed
-      estado 
-      mnethostid 
-      username 
-      password 
-  idnumber 
-  firstname
-  lastname 
-  email 
-  icq 
-  aim 
-  phone1 
-  phone2 
-  institution 
-  department 
-  address 
-  city 
-  country
-  lang 
-  timezone 
-  firstaccess 
-  lastaccess 
-  lastlogin 
-  currentlogin
-  lastip 
-  description
-  mailformat 
-  maildisplay
-  htmleditor 
-  autosubscribe
-  id_depto 
-  id_prov 
-  id_estado_civil
-  fec_nac date
-  updated_at
-  created_at
-  remember_token
-      
+        auth
+        confirmed
+        estado 
+        mnethostid 
+        username 
+        password 
+        idnumber 
+        firstname
+        lastname 
+        email 
+        icq 
+        aim 
+        phone1 
+        phone2 
+        institution 
+        department 
+        address 
+        city 
+        country
+        lang 
+        timezone 
+        firstaccess 
+        lastaccess 
+        lastlogin 
+        currentlogin
+        lastip 
+        description
+        mailformat 
+        maildisplay
+        htmleditor 
+        autosubscribe
+        id_depto 
+        id_prov 
+        id_estado_civil
+        fec_nac date
+        updated_at
+        created_at
+        remember_token
         return View::make('admi.tipo_show');
     }
+    */
 
-*/
-
-    public function getPersonal()
+    public function getPersonalshow()
     {
         $personal = DB::table('personal')->get();
 
@@ -425,13 +501,12 @@ class admController extends BaseController {
         );*/
         return Redirect::to('admi/personal');
     }
-/*
+    /*
 	public function getEventos()
 	{
 
 		return View::make('event');
 	}
-
     public function postEventosedit($id)
     {
         $eventos = DB::table('eventos')
@@ -442,38 +517,9 @@ class admController extends BaseController {
         $eventos = json_encode($eventos);
         return View::make('event');
     }
-
-
-	public function contactos()
-	{
-
-		return View::make('contact');
-	}
-	public function info()
-	{
-
-		return View::make('inf');
-	}
-     public function usuariosregitrados()
-     {
+    public function usuariosregitrados()
+    {
         return Redirect::to('/usuario');
-     }
-    // aumentar todas la funciones que realiza el administrador
-     public function programas()
-     {
-        return Redirect::to('/usuario');
-     }
-     public function usuarios()
-     {
-        return Redirect::to('/usuario');
-     }
-     public function estudiantes()
-     {
-        return Redirect::to('/usuario');
-     }
-      public function docentes()
-     {
-        return Redirect::to('/usuario');
-     }
-*/
+    }
+    */
 }

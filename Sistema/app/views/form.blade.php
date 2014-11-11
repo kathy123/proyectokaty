@@ -1,10 +1,30 @@
 
+<?php
+function generaSelect()
+{
+	include 'conexion.php';
+	conectar();
+	$consulta=pg_query("SELECT id, opcion FROM _paises");
+	desconectar();
+
+	// Voy imprimiendo el primer select compuesto por los paises
+	echo "<select name='_paises' id='_paises' onChange='cargaContenido(this.id)'>";
+	echo "<option value='0'>Seleccione Pais</option>";
+	while($registro=pg_fetch_row($consulta))
+		
+	{
+		echo "<option value='".$registro[0]."'>".$registro[1]."</option>";
+	}
+	echo "</select>";
+}
+?>
 @extends('layouts.master')
 
 @section('title')
  UATF | Inscripción
 @stop
-@section('header')  
+@section('header')
+
 @stop
 @section('content')
 <div class="login">  
@@ -38,7 +58,7 @@
                   </div>
                 @endif
                 </div>
-	             
+                  <H2>DATOS PERSONALES</H2>
                   <div class="form-group">
                     <div class="col-md-3">
 	                  <label for="exampleInputName">Nombre</label>
@@ -49,7 +69,15 @@
                   </div>
                   <div class="form-group">
                     <div class="col-md-3">
-	                  <label for="apellidos">Apellidos</label>
+	                  <label for="apellidos">Apellido Paterno</label>
+	                </div>
+                    <div class="col-md-5">
+                  		<input type="text" name="apellidos"class="text-capitalize form-control" id="" >
+                  	</div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-3">
+	                  <label for="apellidos">Apellidos Materno</label>
 	                </div>
                     <div class="col-md-5">
                   		<input type="text" name="apellidos"class="text-capitalize form-control" id="" >
@@ -57,23 +85,123 @@
                   </div>
                   <div class="form-group">
                      <div class="col-md-3">
-				        <label for="ape" class="col-sm-3 control-label">Email</label>
+				        <label for="ape" class="col-sm-3 control-label">Fecha de Nacimiento (*):</label>
 				     </div>
 				     <div class="col-sm-5">
 				       <input type="email" class="form-control" id="ape" placeholder="Email">
 				     </div>
 				   </div>
-                   <div class="form-group">
+
+				   <div class="form-group">
                      <div class="col-md-3">
-                        <label for="exampleInputName">correo electronico</label>
+				        <label for="ape" class="col-sm-3 control-label">País de Nacimiento (*):</label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Lugar de Nacimiento (*):</label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+                  <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Provincia (*):</label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Departamento (*):</label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+
+                    <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Carnet de Identidad (*): </label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Estado Civil (*):</label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Dirección Domicilio (*): </label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Teléfono Domicilio (*): </label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Celular (*):</label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+                        <label for="exampleInputName">Correo Electronico (*): </label>
                      </div>
                      <div class="col-md-5">
                         <input type="text" name="email" class="form-control" id="" >
                      </div>
                     </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Lugar de Residencia actual(*): </label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <h2>INFORMACION LABORAL</h2>
+                 <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Institución donde Trabaja (*): </label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+				   <div class="form-group">
+                     <div class="col-md-3">
+				        <label for="ape" class="col-sm-3 control-label">Dirección Laboral(*):  </label>
+				     </div>
+				     <div class="col-sm-5">
+				       <input type="email" class="form-control" id="ape" placeholder="Email">
+				     </div>
+				   </div>
+                   
                   <div class="form-group">
                      <div class="col-md-3">
-	                   <label for="exampleInputUsername">telefono</label>
+	                   <label for="exampleInputUsername">Teléfono (*): </label>
 	                 </div>
 	                 <div class="col-md-5">
 	                   <input type="text" class="form-control"name="phone1" id="exampleInputUsername" >
@@ -81,7 +209,7 @@
                   </div>
                   <div class="form-group">
 	                <div class="col-md-3">
-	                  <label for="exampleInputName">fecha de nacimiento</label>
+	                  <label for="exampleInputName">Fax (*): </label>
 	                </div>
 	                <div class="col-md-5">
 	                  <input type="text" class="form-control" id="" >
@@ -89,7 +217,7 @@
                   </div>
                   <div class="form-group">
 	                 <div class="col-md-3">
-	                   <label for="exampleInputEmail1">Pais de nacimiento</label>
+	                   <label for="exampleInputEmail1">Email Institucional(*):</label>
 	                 </div>
                      <div class="col-md-5">
                        <input type="email" class="form-control" name=" " id="exampleInputEmail1" >
@@ -97,7 +225,7 @@
                   </div>
                   <div class="form-group"> 
                     <div class="col-md-3">
-	                  <label for="exampleInputPassword1">Lugar de nacimiento</label>
+	                  <label for="exampleInputPassword1">Ocupación Actual (*): </label>
 	                </div>
 	                <div class="col-md-5">
 	                  <input type="password" class="form-control" id="exampleInputPassword1" >
@@ -105,7 +233,7 @@
                   </div>
                   <div class="form-group"> 
                     <div class="col-md-3">
-	                  <label for="exampleInputPassword2">provincia</label>
+	                  <label for="exampleInputPassword2">Estudios Superiores (Universidad)(*):</label>
 	                </div>
 	                <div class="col-md-5">
 	                  <input type="password" class="form-control" name="provincia" id="exampleInputPassword2" >
@@ -113,7 +241,7 @@
                   </div>
                   <div class="form-group"> 
                     <div class="col-md-3">
-	                  <label for="exampleInputPassword1">departamento</label>
+	                  <label for="exampleInputPassword1">Facultad (*):</label>
 	                </div>
 	                <div class="col-md-5">
 	                  <input type="password" class="form-control" name="" id="exampleInputPassword1" >
@@ -121,15 +249,110 @@
                   </div>
                   <div class="form-group">
                     <div class="col-md-3"> 
-	                  <label for="exampleInputPassword1">Lugar de nacimiento</label>
+	                  <label for="exampleInputPassword1">Ciudad(*): </label>
 	                </div>
 	                <div class="col-md-5">
 	                  <input type="password" class="form-control" id="exampleInputPassword1" >
 	                </div>
                   </div>
                   
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">País (*):</label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                                	
+
+
+
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">Diploma Académico(*): </label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">Título en Provisión Nacional (*): 	</label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">Postgrado(*): </label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                  <h2>utimos cargo desempe;aso</h2>
+                  De (año) (*): 	 Ejemplo: 2014
+	            Ejemplo: 2014
+ 	
+ 	
+
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">De (año) (*): </label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">A (año) (*):  </label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">Cargo(*):  </label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                   <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">Institución(*):</label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                   <div class="form-group">
+                    <div class="col-md-3"> 
+	                  <label for="exampleInputPassword1">Unidad(*):</label>
+	                </div>
+	                <div class="col-md-5">
+	                  <input type="password" class="form-control" id="exampleInputPassword1" >
+	                </div>
+                  </div>
+                    <div id="demo" style="width:600px;">
+					<div class="form-group">
+						<select disabled="disabled" name="_provincias" id="_provincias">
+							<option value="0">Selecciona Provincia...</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<select disabled="disabled" name="_departamentos" id="_departamentos">
+							<option value="0">Selecciona Departamento...</option>
+						</select>
+					</div>
+					<div class="form-group"><?php generaSelect(); ?></div>
+				   </div>
                   <div class="form-actions">
-                   <button type="submit" class="btn btn-success">Sign Up</button>
+                   <button type="submit" class="btn btn-success">Registrarse</button>
                   </div>
                 </form>
                
@@ -141,8 +364,8 @@
       </section>
       <!--/REGISTER -->
       <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-  Launch demo modal
-</button>
+      Launch demo modal
+      </button>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -171,4 +394,7 @@
 @stop
 @section('footer')
   @parent
+  <?php
+  echo HTML::script('select_dependientes_3_niveles.js');
+  ?>
 @stop

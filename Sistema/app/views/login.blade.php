@@ -23,7 +23,7 @@
       <section id="login" class="visible">
         <div class="container">
           <div class="row">
-            <div class="col-md-4 col-md-offset-4">
+            <div class="col-md-6 col-md-offset-3">
               <div class="login-box-plain">
                 <h2 class="bigintro">Ingreso al Sistema</h2>
                 <div class="divide-40"></div>
